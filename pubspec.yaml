@@ -1,0 +1,16 @@
+name: todo_list
+description: A new Flutter project.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.0
+  sqflite: any
+  path_provider: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
