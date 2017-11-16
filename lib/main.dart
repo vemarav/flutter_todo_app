@@ -155,7 +155,7 @@ class TodoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var colors = [100,200,300,400,500,600,700,800,900];
+    var colors = [100,200,300,400,500,600,700];
     var random = new Random();
     return  new Container(
       padding: const EdgeInsets.all(16.0),
@@ -182,13 +182,6 @@ class TodoForm extends State<TodoFormState> {
   new TextEditingController();
   DateTime _fromDate = new DateTime.now();
   TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
-  DateTime _toDate = new DateTime.now();
-  TimeOfDay _toTime = const TimeOfDay(hour: 7, minute: 28);
-  final List<String> _allActivities = <String>[
-    'hiking', 'swimming', 'boating', 'fishing'
-  ];
-  String _activity = 'fishing';
-
   static String routeName = "form";
 
   BuildContext _context;
@@ -227,7 +220,12 @@ class TodoForm extends State<TodoFormState> {
             ),
             new MaterialButton(
               color: Theme.of(context).accentColor,
-                child: new Text("SUBMIT"),
+                child: new Text(
+                    "SUBMIT",
+                    style: new TextStyle(
+                        color: Colors.white
+                    )
+                ),
                 onPressed: _submitForm
             )
           ],
