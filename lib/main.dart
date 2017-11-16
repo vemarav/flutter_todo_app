@@ -12,7 +12,7 @@ void main() {
   runApp(new TodoList());
 }
 
-List<Todo> stateTodos = <Todo>[];
+Todo _updateTodo;
 
 class TodoList extends StatelessWidget {
 
@@ -47,7 +47,6 @@ class TodoListAppState extends State<TodoListApp>
     implements TodoListAppStateView {
 
   ScrollController scrollController = new ScrollController();
-
   List<TodoListView> _todos = <TodoListView>[];
   int _limit = 50;
   TodoPresenter _presenter;
@@ -55,6 +54,7 @@ class TodoListAppState extends State<TodoListApp>
 
   @override
   void initState() {
+    super.initState();
     scrollController.addListener(_paginateTodos);
     _isLoading = true;
     _presenter = new TodoPresenter(this, _provider);
@@ -87,6 +87,11 @@ class TodoListAppState extends State<TodoListApp>
 
   @override
   Widget build(BuildContext context) {
+    if(_updateTodo  != null) {
+      _todos.insert(0, _buildListView(_updateTodo));
+      _updateTodo = null;
+    }
+
     Widget _scrollView = new Scrollbar(
       child: new ListView.builder(
         controller: scrollController,
@@ -130,6 +135,7 @@ class TodoListAppState extends State<TodoListApp>
   }
 
   TodoListView _buildListView(Todo todo) {
+    assert(todo != null);
     return new TodoListView(
       text: _todoText(todo),
       due_at: _todoDueDate(todo),
@@ -174,7 +180,6 @@ class TodoForm extends State<TodoFormState> {
 
   final TextEditingController textTitleEditingController =
   new TextEditingController();
-
   DateTime _fromDate = new DateTime.now();
   TimeOfDay _fromTime = const TimeOfDay(hour: 7, minute: 28);
   DateTime _toDate = new DateTime.now();
@@ -242,7 +247,7 @@ class TodoForm extends State<TodoFormState> {
     String minutes = m < 10 ? "0" + m.toString() : m.toString();
     todo.dueAt = DateTime.parse(date + hours + ":" + minutes + ":00");
     todo = await _provider.insertTodo(todo);
-    stateTodos.add(todo);
+    _updateTodo = todo;
     Navigator.pop(_context);
   }
 }
