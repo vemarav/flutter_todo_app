@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:todo_list/models/todo.dart';
 
-class DatabaseClient {
+class TodoProvider {
   Database _db;
 
   Future create() async {
@@ -17,7 +17,7 @@ class DatabaseClient {
 
   Future _create(Database db, int version) async {
     print(Todo.CREATE_TABLE);
-    await db.execute(Todo.CREATE_TABLE);
+    db.execute(Todo.CREATE_TABLE);
   }
 
   Future<Todo> insertTodo(Todo todo) async {
@@ -25,11 +25,10 @@ class DatabaseClient {
       Directory path = await getApplicationDocumentsDirectory();
       String dbPath = join(path.path, 'todo_list.db');
 
-      _db = await openDatabase(dbPath, version: 1);
+      _db = await openDatabase(dbPath, version: 1, onCreate: this._create);
     }
 
     todo.id = await _db.insert(Todo.TABLE_NAME, todo.toMap());
-
     return todo;
   }
 
@@ -37,18 +36,21 @@ class DatabaseClient {
     if (_db == null) {
       Directory path = await getApplicationDocumentsDirectory();
       String dbPath = join(path.path, 'todo_list.db');
-      _db = await openDatabase(dbPath, version: 1);
+
+      _db = await openDatabase(dbPath, version: 1, onCreate: this._create);
     }
+
     List results = await _db.query(
         Todo.TABLE_NAME,
         columns: Todo.columns,
-        limit: limit, orderBy: "id DESC");
-
+        limit: limit, offset: limit - 50, orderBy: "id DESC");
     List<Todo> _todos = <Todo>[];
     results.forEach((result) {
       Todo todo = Todo.fromMap(result);
       _todos.add(todo);
     });
+//    print("LIMIT " + limit.toString() + " OFFSET "
+//        + (limit - 50).toString());
     return _todos;
   }
 
@@ -57,10 +59,8 @@ class DatabaseClient {
       Directory path = await getApplicationDocumentsDirectory();
       String dbPath = join(path.path, 'todo_list.db');
 
-      _db = await openDatabase(dbPath, version: 1);
+      _db = await openDatabase(dbPath, version: 1, onCreate: this._create);
     }
-
-
     List results = await _db.query(Todo.TABLE_NAME,
         columns: Todo.columns, where: "title = ?", whereArgs: [todo.title]);
 
@@ -69,5 +69,7 @@ class DatabaseClient {
     return todo;
   }
 
-  Future close() async => _db.close();
+  Future close() async {
+    _db.close();
+  }
 }

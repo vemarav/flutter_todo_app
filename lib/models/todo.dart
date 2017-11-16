@@ -41,7 +41,7 @@ class Todo {
     todo.id    = map["id"];
     todo.title = map["title"];
     todo.dueAt = DateTime.parse(map["due_at"]);
-    todo.completedAt = DateTime.parse(map["completed_at"]);
+//    todo.completedAt = DateTime.parse(map["completed_at"]);
     todo.done = map["done"];
     return todo;
   }
