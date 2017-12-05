@@ -1,6 +1,6 @@
-# todo_list
+# TodoList App
 
-A new Flutter project.
+A flutter app based on sqlite database using sqflite plugin.
 
 ## Getting Started
 
