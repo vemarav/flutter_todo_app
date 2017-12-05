@@ -1,6 +1,6 @@
 # TodoList App
 
-A flutter app based on sqlite database using sqflite plugin.
+A flutter app based on sqlite database using [sqflite plugin](https://github.com/tekartik/sqflite).
 
 ## Getting Started
 
